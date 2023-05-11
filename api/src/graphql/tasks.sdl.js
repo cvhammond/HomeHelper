@@ -18,6 +18,7 @@ export const schema = gql`
   type Query {
     tasks: [Task!]! @requireAuth
     task(id: Int!): Task @requireAuth
+    todaysTasks(id: Int!): [Task!]! @requireAuth
   }
 
   input CreateTaskInput {
@@ -48,5 +49,6 @@ export const schema = gql`
     createTask(input: CreateTaskInput!): Task! @requireAuth
     updateTask(id: Int!, input: UpdateTaskInput!): Task! @requireAuth
     deleteTask(id: Int!): Task! @requireAuth
+    markTaskCompleted(id: Int!): Task! @requireAuth
   }
 `

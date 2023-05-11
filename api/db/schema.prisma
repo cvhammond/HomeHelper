@@ -32,7 +32,7 @@ model Task {
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   time      DateTime?
-  start     DateTime?
+  start     DateTime @default(now())
   end       DateTime?
   completed Boolean[] @default([])
   recurring Boolean @default(false)

@@ -24,7 +24,7 @@ const Menu = () => {
         ...items,
         {
           key: 'user',
-          label: currentUser.username,
+          label: currentUser?.username,
           icon: <UserOutlined />,
           children: [
             {

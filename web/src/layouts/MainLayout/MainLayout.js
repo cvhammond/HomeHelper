@@ -15,7 +15,8 @@ const MainLayout = ({ children }) => {
           {children}
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-          HomeHelper ©2023 Created by <a href="https://cvhammond.com">Claire V. Hammond</a>
+          <div>HomeHelper ©2023</div>
+          <div>Created by <a href="https://cvhammond.com">Claire V. Hammond</a></div>
         </Footer>
       </Layout>
     </>
