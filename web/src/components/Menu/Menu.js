@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from 'src/auth'
 import { Menu as MenuAntd } from 'antd'
-import { HomeOutlined, LoginOutlined, AppstoreAddOutlined, LogoutOutlined, UserOutlined, CalendarOutlined } from '@ant-design/icons'
+import { DashboardOutlined, LoginOutlined, AppstoreAddOutlined, LogoutOutlined, UserOutlined, CalendarOutlined } from '@ant-design/icons'
 import { routes } from '@redwoodjs/router'
 
 const Menu = () => {
   const { isAuthenticated, logOut, currentUser } = useAuth()
 
   const [menuItems, setMenuItems] = useState(items)
-  const [current, setCurrent] = useState('home')
+  const [current, setCurrent] = useState('dashboard')
 
   const items = [
     {
-      key: 'home',
-      label: <a href={routes.home()}>Home</a>,
-      icon: <HomeOutlined />,
+      key: 'dashboard',
+      label: <a href={routes.home()}>Dashboard</a>,
+      icon: <DashboardOutlined />,
     },
   ]
 
@@ -52,7 +52,7 @@ const Menu = () => {
   }
 
   return (
-    <MenuAntd mode="horizontal" items={menuItems} onClick={onClick} selectedKeys={[current]} theme="dark" />
+    <MenuAntd mode="inline" items={menuItems} onClick={onClick} selectedKeys={[current]} />
   )
 }
 

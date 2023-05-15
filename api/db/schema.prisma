@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -34,7 +34,7 @@ model Task {
   time      DateTime?
   start     DateTime @default(now())
   end       DateTime?
-  completed Boolean[] @default([])
+  completed Int     @default(0)
   recurring Boolean @default(false)
   recurringDays Int?
 }

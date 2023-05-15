@@ -35,52 +35,45 @@ export const Task = {
   },
 }
 
-export const todaysTasks = async ({ id }) => {
+export const todaysTasks = async ({ userId }) => {
   const nonRecurringTasks = await db.task.findMany({
     where: {
-      userId: id,
+      OR: [
+        { end: { gte: new Date() } },
+        { end: null },
+      ],
+      userId: userId,
       recurring: false,
       start: { lte: new Date() },
-      completed: { has: false }
+      completed: 0,
     },
   })
   const recurringTasks = await db.task.findMany({
     where: {
       OR: [
-        { end: { gte: new Date() }, },
-        { end: { equals: null }, },
+        { end: { gte: new Date() } },
+        { end: null },
       ],
-      AND:
-      {
-        userId: id,
+      AND: {
+        userId: userId,
         recurring: true,
         start: { lte: new Date() },
       },
-    }
+    },
   })
-  const validRecurringTasks = recurringTasks.filter((task) => {
+  const validRecurringTasks = recurringTasks.filter(task => {
     const numDaysAfterStart = Math.floor((new Date() - task.start) / (1000 * 60 * 60 * 24))
     const numIntervals = Math.floor(numDaysAfterStart / task.recurringDays)
 
-    return task.completed.length <= numIntervals + 1 && numDaysAfterStart % task.recurringDays === 0
+    return numIntervals >= task.completed
   })
-  const tasks = [...nonRecurringTasks, ...validRecurringTasks]
 
-  return tasks
+  return [...nonRecurringTasks, ...validRecurringTasks]
 }
 
-export const markTaskCompleted = async ({ id }) => {
-  const task = await db.task.findUnique({
-    where: { id },
-  })
-  let completed = [true]
-  if (task.recurring) {
-    completed = [...task.completed, true]
-  }
-
+export const markTaskComplete = ({ id }) => {
   return db.task.update({
-    data: { completed },
+    data: { completed: { increment: 1 } },
     where: { id },
   })
 }
-

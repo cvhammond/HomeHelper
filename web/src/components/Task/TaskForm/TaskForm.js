@@ -1,5 +1,6 @@
-import { Form, Input, Button, Switch, Radio, InputNumber, TimePicker, DatePicker} from 'antd'
+import { Form, Input, Button, Switch, Radio, InputNumber, TimePicker, DatePicker } from 'antd'
 import { useQuery } from '@redwoodjs/web'
+import dayjs from 'dayjs'
 
 const QUERY = gql`
   query {
@@ -14,6 +15,8 @@ const TaskForm = (props) => {
   const { data } = useQuery(QUERY)
 
   const onSubmit = (data) => {
+    data.completed = data.completed === false ? 0 : 1
+    console.log(data)
     props.onSave(data, props?.task?.id)
   }
 
@@ -45,7 +48,7 @@ const TaskForm = (props) => {
         <TimePicker />
       </Form.Item>
 
-      <Form.Item label="Start date" name="start">
+      <Form.Item label="Start date" name="start" initialValue={dayjs()} >
         <DatePicker />
       </Form.Item>
 

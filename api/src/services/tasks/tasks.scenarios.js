@@ -3,11 +3,11 @@ export const standard = defineScenario({
     one: {
       data: {
         title: 'String',
-        updatedAt: '2023-05-09T17:47:33.225Z',
+        updatedAt: '2023-05-14T16:30:15.924Z',
         user: {
           create: {
-            username: 'String2555476',
-            updatedAt: '2023-05-09T17:47:33.225Z',
+            username: 'String5015622',
+            updatedAt: '2023-05-14T16:30:15.924Z',
             hashedPassword: 'String',
             salt: 'String',
           },
@@ -17,11 +17,11 @@ export const standard = defineScenario({
     two: {
       data: {
         title: 'String',
-        updatedAt: '2023-05-09T17:47:33.225Z',
+        updatedAt: '2023-05-14T16:30:15.924Z',
         user: {
           create: {
-            username: 'String7577775',
-            updatedAt: '2023-05-09T17:47:33.225Z',
+            username: 'String644744',
+            updatedAt: '2023-05-14T16:30:15.924Z',
             hashedPassword: 'String',
             salt: 'String',
           },

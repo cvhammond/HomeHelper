@@ -8,9 +8,9 @@ export const schema = gql`
     user: User!
     userId: Int!
     time: DateTime
-    start: DateTime
+    start: DateTime!
     end: DateTime
-    completed: [Boolean]!
+    completed: Int!
     recurring: Boolean!
     recurringDays: Int
   }
@@ -18,7 +18,7 @@ export const schema = gql`
   type Query {
     tasks: [Task!]! @requireAuth
     task(id: Int!): Task @requireAuth
-    todaysTasks(id: Int!): [Task!]! @requireAuth
+    todaysTasks(userId: Int!): [Task!]! @requireAuth
   }
 
   input CreateTaskInput {
@@ -26,9 +26,9 @@ export const schema = gql`
     description: String
     userId: Int!
     time: DateTime
-    start: DateTime
+    start: DateTime!
     end: DateTime
-    completed: [Boolean]!
+    completed: Int!
     recurring: Boolean!
     recurringDays: Int
   }
@@ -40,7 +40,7 @@ export const schema = gql`
     time: DateTime
     start: DateTime
     end: DateTime
-    completed: [Boolean]!
+    completed: Int
     recurring: Boolean
     recurringDays: Int
   }
@@ -49,6 +49,6 @@ export const schema = gql`
     createTask(input: CreateTaskInput!): Task! @requireAuth
     updateTask(id: Int!, input: UpdateTaskInput!): Task! @requireAuth
     deleteTask(id: Int!): Task! @requireAuth
-    markTaskCompleted(id: Int!): Task! @requireAuth
+    markTaskComplete(id: Int!): Task! @requireAuth
   }
 `

@@ -6,8 +6,8 @@ import { useQuery, useMutation } from '@redwoodjs/web'
 import { StarOutlined, CheckOutlined, ClockCircleOutlined, CarryOutOutlined } from '@ant-design/icons'
 
 const QUERY = gql`
-  query GetTodaysTasks($id: Int!){
-    todaysTasks(id: $id) {
+  query GetTodaysTasks($userId: Int!){
+    todaysTasks(userId: $userId) {
       id
       title
       description
@@ -17,8 +17,8 @@ const QUERY = gql`
 `
 
 const TASK_COMPLETED = gql`
-  mutation MarkTaskCompleted($id: Int!) {
-    markTaskCompleted(id: $id) {
+  mutation MarkTaskComplete($id: Int!) {
+    markTaskComplete(id: $id) {
       id
     }
   }
@@ -28,10 +28,14 @@ const HomePage = () => {
   const { isAuthenticated, logOut, userMetadata } = useAuth()
   const [tasks, setTasks] = React.useState([])
 
-  const [markTaskCompleted] = useMutation(TASK_COMPLETED)
+  const [markTaskComplete] = useMutation(TASK_COMPLETED)
 
-  const { loading, error, data } =
-    useQuery(QUERY, { variables: { id: parseInt(userMetadata) }, onCompleted: (data) => setTasks(formatTaskData(data.todaysTasks)) })
+  const { loading, error, data } = useQuery(
+    QUERY, {
+    variables: { userId: parseInt(userMetadata) },
+    onCompleted: (data) =>
+      setTasks(formatTaskData(data.todaysTasks))
+  })
 
   const columns = [
     {
@@ -53,7 +57,7 @@ const HomePage = () => {
             <Button disabled size='large' icon={<StarOutlined />} /> :
             <Button size='large' type='primary' icon={<CheckOutlined />}
               onClick={() => {
-                /* markTaskCompleted({ variables: { id: record.key } }) */
+                markTaskComplete({ variables: { id: record.key } })
                 tasks.find(task => task.key === record.key).markedCompleted = true
                 setTasks([...tasks])
               }
@@ -71,11 +75,6 @@ const HomePage = () => {
 
       <Table dataSource={tasks} columns={columns} pagination={false} />
 
-      {isAuthenticated ?
-        <Button onClick={logOut}>Logout</Button> :
-        <a href={routes.login()}>
-          <Button >Login</Button>
-        </a>}
     </>
   )
 }

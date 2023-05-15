@@ -23,13 +23,13 @@ describe('tasks', () => {
     const result = await createTask({
       input: {
         title: 'String',
-        updatedAt: '2023-05-09T17:47:33.189Z',
+        updatedAt: '2023-05-14T16:30:15.885Z',
         userId: scenario.task.two.userId,
       },
     })
 
     expect(result.title).toEqual('String')
-    expect(result.updatedAt).toEqual(new Date('2023-05-09T17:47:33.189Z'))
+    expect(result.updatedAt).toEqual(new Date('2023-05-14T16:30:15.885Z'))
     expect(result.userId).toEqual(scenario.task.two.userId)
   })
 
