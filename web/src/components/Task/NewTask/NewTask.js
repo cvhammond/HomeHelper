@@ -1,6 +1,6 @@
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
-import { message } from 'antd'
+import { Toast } from 'antd-mobile'
 
 import TaskForm from 'src/components/Task/TaskForm'
 
@@ -15,11 +15,11 @@ const CREATE_TASK_MUTATION = gql`
 const NewTask = () => {
   const [createTask, { loading, error }] = useMutation(CREATE_TASK_MUTATION, {
     onCompleted: () => {
-      message.success('Task created')
+      Toast.show({icon: 'success', content:'Task created'})
       navigate(routes.tasks())
     },
     onError: (error) => {
-      message.error(error.message)
+      Toast.show({icon: 'fail', content:error.message})
     },
   })
 

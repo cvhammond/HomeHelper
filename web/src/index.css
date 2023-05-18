@@ -1,3 +1,23 @@
 body {
   margin: 0;
 }
+
+:root:root {
+  --adm-color-primary: #493657;
+  --adm-color-success: #297045;
+  --adm-color-warning: #f5cb5c;
+  --adm-color-danger: #e65f5c;
+
+  --adm-color-white: #f7f4ed;
+  --adm-color-text: #352c18;
+  --adm-color-text-secondary: #584928;
+  --adm-color-weak: #493657;
+  --adm-color-light: #c7b284;
+  --adm-color-border: #d7c8a7;
+  --adm-color-box: #d7c8a7;
+  --adm-color-background: #e7deca;
+
+  --adm-font-family: 'Roboto', sans-serif;
+
+}
+

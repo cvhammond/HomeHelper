@@ -1,9 +1,18 @@
-import { routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { useAuth } from 'src/auth'
-import { Button, Table } from 'antd'
+import { SwipeAction, List, AutoCenter } from 'antd-mobile'
+import {
+  CheckCircleOutline,
+  InformationCircleOutline,
+  RightOutline,
+  LeftOutline,
+  TextOutline,
+  MinusOutline,
+  CalendarOutline,
+} from 'antd-mobile-icons'
+import { navigate, routes } from '@redwoodjs/router'
 import { useQuery, useMutation } from '@redwoodjs/web'
-import { StarOutlined, CheckOutlined, ClockCircleOutlined, CarryOutOutlined } from '@ant-design/icons'
+import { useRef } from 'react'
 
 const QUERY = gql`
   query GetTodaysTasks($userId: Int!){
@@ -29,52 +38,57 @@ const HomePage = () => {
   const [tasks, setTasks] = React.useState([])
 
   const [markTaskComplete] = useMutation(TASK_COMPLETED)
+  const swipeActionRefs = useRef([])
 
-  const { loading, error, data } = useQuery(
+  useQuery(
     QUERY, {
     variables: { userId: parseInt(userMetadata) },
     onCompleted: (data) =>
       setTasks(formatTaskData(data.todaysTasks))
   })
 
-  const columns = [
-    {
-      title: "Tasks",
-      dataIndex: 'title',
-      key: 'title',
-    },
-    {
-      title: <ClockCircleOutlined />,
-      dataIndex: 'time',
-      key: 'time',
-    },
-    {
-      title: <CarryOutOutlined />,
-      key: 'id',
-      render: (_, record) => (
-        <>
-          {record.markedCompleted ?
-            <Button disabled size='large' icon={<StarOutlined />} /> :
-            <Button size='large' type='primary' icon={<CheckOutlined />}
-              onClick={() => {
-                markTaskComplete({ variables: { id: record.key } })
-                tasks.find(task => task.key === record.key).markedCompleted = true
-                setTasks([...tasks])
-              }
-              }
-            />
-          }
-        </>
-      ),
-    },
-  ];
-
   return (
     <>
-      <MetaTags title="Home" description="Home page" />
+      <MetaTags title="Tasks" description="Task Page" />
+      <List>
+        <List.Item title={<AutoCenter>Tasks for Today</AutoCenter>}
+          prefix={<><RightOutline /><InformationCircleOutline /></>}
+          extra={<><CheckCircleOutline fontSize={'var(--adm-font-size-9)'} /><LeftOutline fontSize={'var(--adm-font-size-9)'} /></>} >
+        </List.Item>
+        {tasks.map((task, idx) => {
+          return (
+            <SwipeAction
+              ref={(ref) => swipeActionRefs.current[idx] = ref}
+              key={task.key}
+              rightActions={[{ key: 'complete', text: <CheckCircleOutline />, color: 'success' }]}
+              leftActions={[{ key: 'info', text: <InformationCircleOutline />, color: 'weak' }]}
+              onActionsReveal={(side) => {
+                if (side === 'right') {
+                  //markTaskComplete({ variables: { id: task.key } })
+                  const idx = tasks.findIndex((t) => t.key === task.key)
+                  tasks[idx].markedCompleted = true
+                  tasks.push(tasks.splice(idx, 1)[0])
+                  swipeActionRefs.current?.[idx].close()
+                  setTasks([...tasks])
+                }
+                else {
+                  navigate(routes.task({ id: task.key }))
+                }
+              }}
+            >
+              <List.Item
+                key={task.key}
+                disabled={task.markedCompleted}
+                prefix={task.description ? <TextOutline /> : <MinusOutline />}
+                extra={task.markedCompleted ? <CheckCircleOutline /> : <CalendarOutline />}
+              >
+                {task.title}
+              </List.Item>
 
-      <Table dataSource={tasks} columns={columns} pagination={false} />
-
+            </SwipeAction >
+          )
+        })}
+      </List>
     </>
   )
 }
