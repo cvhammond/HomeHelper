@@ -8,6 +8,8 @@ export const QUERY = gql`
       createdAt
       updatedAt
       userId
+      description
+      time
       completed
       recurring
       recurringDays

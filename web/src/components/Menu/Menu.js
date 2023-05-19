@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from 'src/auth'
 import { TabBar } from 'antd-mobile'
 import { AddSquareOutline, UserCircleOutline, UnorderedListOutline } from 'antd-mobile-icons'
@@ -16,6 +16,10 @@ const Menu = () => {
   }
 
   const [current, setCurrent] = useState(getKeyFromValue(menuItemToPath, pathname))
+
+  useEffect(() => {
+    setCurrent(getKeyFromValue(menuItemToPath, pathname))
+  }, [pathname])
 
   const onChange = (key) => {
     setCurrent(key)

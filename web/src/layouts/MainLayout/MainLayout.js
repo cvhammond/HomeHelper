@@ -7,7 +7,7 @@ const MainLayout = ({ children }) => {
       <div style={{ backgroundColor: '#493657' }}><img src="/Title.svg" style={{ width: '200px', margin: 'auto', display: 'block', backgroundColor: '#493657' }} /></div>
       {children}
       <Footer
-        style={{ marginBottom: '49px' }}
+        style={{paddingBottom: '24px', marginBottom: '49px' }}
         label="HomeHelper"
         chips={[
           {

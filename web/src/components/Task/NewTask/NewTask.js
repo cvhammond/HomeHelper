@@ -16,7 +16,7 @@ const NewTask = () => {
   const [createTask, { loading, error }] = useMutation(CREATE_TASK_MUTATION, {
     onCompleted: () => {
       Toast.show({icon: 'success', content:'Task created'})
-      navigate(routes.tasks())
+      navigate(routes.home())
     },
     onError: (error) => {
       Toast.show({icon: 'fail', content:error.message})

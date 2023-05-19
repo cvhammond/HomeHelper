@@ -1,8 +1,10 @@
-import { Link, routes, navigate } from '@redwoodjs/router'
-import { useMutation } from '@redwoodjs/web'
+import { Link, routes, navigate, back } from '@redwoodjs/router'
+import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
+import { CloseCircleOutline, CheckCircleOutline } from 'antd-mobile-icons'
 
-import { checkboxInputTag, timeTag } from 'src/lib/formatters'
+import { List, Card, AutoCenter, Space, Button, NavBar } from 'antd-mobile'
+import dayjs from 'dayjs'
 
 const DELETE_TASK_MUTATION = gql`
   mutation DeleteTaskMutation($id: Int!) {
@@ -12,83 +14,77 @@ const DELETE_TASK_MUTATION = gql`
   }
 `
 
+const GET_USERNAME_QUERY = gql`
+  query GetUsername($id: Int!) {
+    user(id: $id) {
+      username
+    }
+  }
+`
+
+
 const Task = ({ task }) => {
   const [deleteTask] = useMutation(DELETE_TASK_MUTATION, {
     onCompleted: () => {
       toast.success('Task deleted')
-      navigate(routes.tasks())
+      navigate(routes.home())
     },
     onError: (error) => {
       toast.error(error.message)
     },
   })
 
+  const { data } = useQuery(GET_USERNAME_QUERY, {
+    variables: { id: task.userId },
+  })
+
   const onDeleteClick = (id) => {
-    if (confirm('Are you sure you want to delete task ' + id + '?')) {
+    if (confirm('Are you sure you want to delete this task?')) {
       deleteTask({ variables: { id } })
     }
   }
 
+
   return (
     <>
-      <div className="rw-segment">
-        <header className="rw-segment-header">
-          <h2 className="rw-heading rw-heading-secondary">
-            Task {task.id} Detail
-          </h2>
-        </header>
-        <table className="rw-table">
-          <tbody>
-            <tr>
-              <th>Id</th>
-              <td>{task.id}</td>
-            </tr>
-            <tr>
-              <th>Title</th>
-              <td>{task.title}</td>
-            </tr>
-            <tr>
-              <th>Created at</th>
-              <td>{timeTag(task.createdAt)}</td>
-            </tr>
-            <tr>
-              <th>Updated at</th>
-              <td>{timeTag(task.updatedAt)}</td>
-            </tr>
-            <tr>
-              <th>User id</th>
-              <td>{task.userId}</td>
-            </tr>
-            <tr>
-              <th>Completed</th>
-              <td>{checkboxInputTag(task.completed)}</td>
-            </tr>
-            <tr>
-              <th>Recurring</th>
-              <td>{checkboxInputTag(task.recurring)}</td>
-            </tr>
-            <tr>
-              <th>Recurring days</th>
-              <td>{task.recurringDays}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <nav className="rw-button-group">
-        <Link
-          to={routes.editTask({ id: task.id })}
-          className="rw-button rw-button-blue"
-        >
-          Edit
-        </Link>
-        <button
-          type="button"
-          className="rw-button rw-button-red"
-          onClick={() => onDeleteClick(task.id)}
-        >
-          Delete
-        </button>
-      </nav>
+      <NavBar onBack={() => back()}>Task</NavBar>
+      <List>
+        <List.Item title={'Name'}>
+          {task.title}
+        </List.Item>
+        {task.time &&
+          <List.Item title={'Due'}>
+            {dayjs(task.time).format('h:mm a')}
+          </List.Item>}
+        {task.description &&
+          <List.Item title={'Description'}>
+            {task.description}
+          </List.Item>
+        }
+        <List.Item title={'User'}>
+          {data?.user?.username}
+        </List.Item>
+        <List.Item title={'Completed'}>
+          {!task.completed ? <CloseCircleOutline /> : <CheckCircleOutline />}
+        </List.Item>
+        <List.Item title={'Recurring'}>
+          {!task.recurring ? <CloseCircleOutline /> : <CheckCircleOutline />}
+        </List.Item>
+        {task.recurring &&
+          <List.Item title={'Recurring days'}>
+            {task.recurringDays}
+          </List.Item>}
+
+      </List>
+
+      <Card>
+        <AutoCenter>
+          <Space>
+            <Button color={'primary'} onClick={() => navigate(routes.editTask({ id: task.id }))}>Edit</Button>
+            <Button color={'danger'} onClick={() => onDeleteClick(task.id)}>Delete</Button>
+          </Space>
+        </AutoCenter>
+      </Card>
     </>
   )
 }
