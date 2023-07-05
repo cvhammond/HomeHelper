@@ -22,7 +22,7 @@ const TaskForm = (props) => {
       data.time = dayjs().set('hour', data.time[0]).set('minute', data.time[1])
     }
     data.userId = parseInt(data.userId)
-    console.log(data)
+    data.recurringDays = parseInt(data.recurringDays)
     props.onSave(data, props?.task?.id)
   }
 

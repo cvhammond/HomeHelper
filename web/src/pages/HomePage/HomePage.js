@@ -69,7 +69,7 @@ const HomePage = () => {
                 leftActions={[{ key: 'info', text: <InformationCircleOutline />, color: 'weak' }]}
                 onActionsReveal={(side) => {
                   if (side === 'right') {
-                    //markTaskComplete({ variables: { id: task.key } })
+                    markTaskComplete({ variables: { id: task.key } })
                     const idx = tasks.findIndex((t) => t.key === task.key)
                     tasks[idx].markedCompleted = true
                     tasks.push(tasks.splice(idx, 1)[0])
